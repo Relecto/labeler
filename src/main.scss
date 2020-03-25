@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+$panel-radius: 0px;
+$panel-margin: 0;
+// $panel-heading-padding: 0.5em 1em;
+// Bulma
+@import "~bulma/bulma";
+
+// Font Awesome
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts'; 
+
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+

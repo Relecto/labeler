@@ -64,6 +64,8 @@ export default new Vuex.Store({
         selections: data.selections || [],
         meta: data.meta || {}
       }
+
+      document.title = data.path + ' - Labeler'
     },
     setImageDimensions(state, { width, height }) {
       state.image.width = width

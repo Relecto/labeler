@@ -9,7 +9,7 @@
     <a>Dataset</a>
     <a>Host</a>
   </p>
-  <div class="list">
+  <div class="panel-items">
     <a
     v-for="path in images"
     :key="path"
@@ -51,7 +51,7 @@ export default {
 .header {
   flex-grow: 0;
 }
-.list {
+.panel-items {
   flex-grow: 2;
 
   overflow-y: scroll;

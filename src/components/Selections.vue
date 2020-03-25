@@ -3,7 +3,7 @@
   <p class="panel-heading header">
     Selections
   </p>
-  <div class="list">
+  <div class="panel-items">
     <a
     v-for="(selection, i) in realSelections"
     :key="i"
@@ -66,7 +66,7 @@ export default {
 .header {
   flex-grow: 0;
 }
-.list {
+.panel-items {
   flex-grow: 2;
 
   overflow-y: scroll;

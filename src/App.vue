@@ -24,7 +24,6 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
 import NativeCanvas from './components/NativeCanvas.vue'
 import Dataset from './components/Dataset.vue'
 import Selections from './components/Selections.vue'

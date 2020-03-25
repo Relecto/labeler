@@ -1,12 +1,20 @@
 <template>
   <div id="app" class="columns is-gapless">
     <div class="column is-one-fifth">
-      <Dataset>
-      </Dataset>
-      <Categories>
-      </Categories>
-      <Selections>
-      </Selections>
+      <div class="aside">
+        <div class="dataset-container">
+          <Dataset>
+          </Dataset>
+        </div>
+        <div class="categories-container">
+          <Categories>
+          </Categories>
+        </div>
+        <div class="selections-container">
+          <Selections>
+          </Selections>
+        </div>
+      </div>
     </div>
 
     <div class="column">
@@ -60,23 +68,23 @@ export default {
   box-sizing: border-box; */
 }
 
-.panel-container {
-  position: fixed;
-  margin: 1vh;
-  max-width: 25vw;
-  min-width: 250px;
- /* overflow-y: scroll; */
-  z-index: 10; 
-}
+.aside {
+  display: flex;
+  flex-direction: column;
 
+  height: 100%;
+}
+.dataset-container {
+  max-height: 30%;
+  flex-grow: 1;
+}
+.categories-container {
+  max-height: 25%;
+  flex-grow: 1;
+}
 .selections-container {
-  position: fixed;
-  margin-right: 1vh;
-  margin-top: 1vh;
-  max-width: 25vw;
-  min-width: 250px;
- /* overflow-y: scroll; */
-  z-index: 10; 
+  max-height: 45%;
+  flex-grow: 1;
 }
 
 html, body {

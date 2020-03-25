@@ -1,15 +1,15 @@
 <template>
 <nav class="panel">
-  <p class="panel-heading">
+  <p class="panel-heading header">
     Dataset
   </p>
-  <p class="panel-tabs">
+  <p class="panel-tabs header">
     <a class="is-active">All</a>
     <a>Image</a>
     <a>Dataset</a>
     <a>Host</a>
   </p>
-  <div class="image-list">
+  <div class="list">
     <a
     v-for="path in images"
     :key="path"
@@ -43,10 +43,18 @@ export default {
 <style scoped>
 .panel {
   background: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.image-list {
-  max-height: 30vh;
-  min-height: 200px;
-  overflow: scroll;
+
+.header {
+  flex-grow: 0;
+}
+.list {
+  flex-grow: 2;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>

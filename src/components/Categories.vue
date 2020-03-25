@@ -3,7 +3,7 @@
   <p class="panel-heading">
     Categories
   </p>
-  <div class="category-list">
+  <div class="list">
     <a
     v-for="(category, i) in categories"
     :key="i"
@@ -42,10 +42,19 @@ export default {
 <style scoped>
 .panel {
   background: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-basis: content;
 }
-.category-list {
-  max-height: 20vh;
-  min-height: 200px;
-  overflow: scroll;
+
+.header {
+  flex-grow: 0;
+}
+.list {
+  flex-grow: 2;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>

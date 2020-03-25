@@ -1,9 +1,9 @@
 <template>
 <nav class="panel">
-  <p class="panel-heading">
+  <p class="panel-heading header">
     Selections
   </p>
-  <div class="selection-list">
+  <div class="list">
     <a
     v-for="(selection, i) in realSelections"
     :key="i"
@@ -57,12 +57,22 @@ export default {
 <style scoped>
 .panel {
   background: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-basis: content;
 }
-.selection-list {
-  max-height: 70vh;
-  min-height: 400px;
-  overflow: scroll;
+
+.header {
+  flex-grow: 0;
 }
+.list {
+  flex-grow: 2;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .buttons {
   margin-bottom: 0;
 }

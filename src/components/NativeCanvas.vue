@@ -12,15 +12,15 @@
         @load="onImageLoad"
       />
       <CanvasSelection
-        v-for="(selection, i) in selections"
+        v-for="(rect, i) in rects"
         :key="i"
 
         :active="i == activeSelection"
-        :x="selection.x"
-        :y="selection.y"
-        :width="selection.width"
-        :height="selection.height"
-        :color="palette[categories.indexOf(selection.category)]"
+        :x="rect.x"
+        :y="rect.y"
+        :width="rect.width"
+        :height="rect.height"
+        :color="rect.color"
 
         @mousedown="selectionMouseDown(i)"
         @resizestart="resizeStart(i, arguments[0])"
@@ -60,6 +60,12 @@ export default {
   computed: {
     ...mapState({
       selections: state => state.image.selections,
+      rects: state => state.image.selections.map(s => {
+        return {
+          color: state.palette[state.categories.indexOf(s.category)],
+          ...s.client
+        }
+      }),
       activeSelection: state => state.image.activeSelection,
       categories: state => state.categories,
       activeCategory: state => state.activeCategory,
@@ -70,10 +76,10 @@ export default {
     }
   },
   beforeDestroy() {
-    // window.removeEventListener('resize', this.resizeImage)
+    window.addEventListener('resize', this.resize)
   },
   mounted() {
-    // this.svg = new SVG('#svg')
+    window.addEventListener('resize', this.resize)
   },
   methods: {
     ...mapMutations([
@@ -84,7 +90,10 @@ export default {
       'setImageDimensions',
       'setCanvasDimensions'
     ]),
-
+    resize() {
+      let { width, height } = this.$refs.container.getBoundingClientRect()
+      this.setCanvasDimensions({ width, height })
+    },
     onImageLoad() {
       let { naturalWidth, naturalHeight } = this.$refs.image
       let { width, height } = this.$refs.container.getBoundingClientRect()
@@ -115,8 +124,10 @@ export default {
     overlayMouseUp() {
       this.drawing = false
 
-      if (!this.active.width && !this.active.height || 
-          this.active.width < MIN_SIZE || this.active.height < MIN_SIZE) {
+      let rect = this.active.real
+
+      if (!rect.width && !rect.height || 
+          rect.width < MIN_SIZE || rect.height < MIN_SIZE) {
         this.removeSelection(this.selections.length - 1)
         this.setActiveSelection(null)
       }
@@ -158,12 +169,12 @@ export default {
       rect.x = x
       rect.y = y
 
-      rect.width = Math.abs(width)
-      rect.height = Math.abs(height)
+      width = Math.abs(width)
+      height = Math.abs(height)
 
       this.setSelection({
         index: this.selections.length - 1,
-        selection: rect
+        dimensions: { x, y, width, height }
       })
     },
 
@@ -177,7 +188,7 @@ export default {
     },
     selectionMouseMove(e) {
       const container = this.$refs.container.getBoundingClientRect()
-      let rect = this.active 
+      let rect = this.active.client
 
       let x = rect.x + e.movementX
       let y = rect.y + e.movementY
@@ -189,12 +200,9 @@ export default {
         y = rect.y
       }
 
-      rect.x = x
-      rect.y = y
-
       this.setSelection({
         index: this.activeSelection,
-        selection: rect
+        dimensions: { x, y, width: rect.width, height: rect.height }
       })
     },
     selectionMouseUp() {
@@ -214,7 +222,7 @@ export default {
     },
     resizeMove(e) {
       const container = this.$refs.container.getBoundingClientRect()
-      let rect = this.active 
+      let rect = this.active.client
 
       let x = rect.x
       let y = rect.y
@@ -268,14 +276,9 @@ export default {
         height = rect.height
       }
 
-      rect.x = x
-      rect.y = y
-      rect.width = width
-      rect.height = height
-
       this.setSelection({
         index: this.activeSelection,
-        selection: rect
+        dimensions: { x, y, width, height }
       })
     },
     resizeEnd() {

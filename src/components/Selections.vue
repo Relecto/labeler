@@ -5,7 +5,7 @@
   </p>
   <div class="panel-items">
     <a
-    v-for="(selection, i) in realSelections"
+    v-for="(selection, i) in selections"
     :key="i"
 
     @click="setActiveSelection(i)"
@@ -17,10 +17,10 @@
     </span>
     <div class="columns is-mobile selection-item">
       <div class="column is-one-third selection-column">
-        <p>x: {{selection.x}}</p> <p>y: {{selection.y}}</p>
+        <p>x: {{selection.real.x}}</p> <p>y: {{selection.real.y}}</p>
       </div>
       <div class="column is-narrow selection-column">
-        <p>w: {{selection.width}} </p> <p> h: {{selection.height}} </p>
+        <p>w: {{selection.real.width}} </p> <p> h: {{selection.real.height}} </p>
       </div>
       <div class="column selection-column">
         <button @click="removeSelection(i)" class="button is-danger is-outlined is-small">
@@ -38,15 +38,15 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   computed: {
     ...mapState({
         image: state => state.image,
-        // selections: state => state.image.selections
+        selections: state => state.image.selections
     }),
-    ...mapGetters(['realSelections'])
+    // ...mapGetters(['realSelections'])
   },
   methods: {
     ...mapMutations(['setActiveSelection', 'removeSelection'])

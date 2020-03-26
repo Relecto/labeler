@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { listImages, getImageData, getCategories } from '../api'
-import { map } from '../helpers'
+import { mapSelection } from '../helpers'
 
 Vue.use(Vuex)
 
@@ -10,9 +10,7 @@ export default new Vuex.Store({
     images: [],
     image: {
       path: '',
-      width: null,
-      height: null,
-      // dimensions: { width: null, height: null },
+      dimensions: { width: null, height: null },
       activeSelection: null,
       selections: [],
       meta: {}
@@ -34,22 +32,7 @@ export default new Vuex.Store({
     },
     activeCategory(state) {
       return state.categories[state.activeCategory]
-    },
-    /**
-     * realSelections returns selection dimensions 
-     * mapped to image coordinates 
-     */
-    realSelections(state) {
-      return state.image.selections.map(s => {
-        let news = {
-          x: Math.floor(map(s.x, 0, state.canvas.width, 0, state.image.width)),
-          y: Math.floor(map(s.y, 0, state.canvas.height, 0, state.image.height)),
-          width: Math.floor(map(s.width, 0, state.canvas.width, 0, state.image.width)),
-          height: Math.floor(map(s.height, 0, state.canvas.height, 0, state.image.height))
-        }
-        return news
-      })
-    },
+    }
   },
   mutations: {
     setImages(state, images) {
@@ -58,8 +41,7 @@ export default new Vuex.Store({
     setImage(state, data) {
       state.image = {
         path: data.path,
-        width: null, 
-        height: null,
+        dimensions: { width: null, height: null },
         activeSelection: null,
         selections: data.selections || [],
         meta: data.meta || {}
@@ -68,25 +50,48 @@ export default new Vuex.Store({
       document.title = data.path + ' - Labeler'
     },
     setImageDimensions(state, { width, height }) {
-      state.image.width = width
-      state.image.height = height
+      state.image.dimensions.width = width
+      state.image.dimensions.height = height
     },
     setCanvasDimensions(state, { width, height }) {
       state.canvas.width = width
       state.canvas.height = height
+
+      // Resize selections
+      state.image.selections = state.image.selections.map(s => {
+        s.client = mapSelection(s.real, state.image.dimensions, state.canvas)
+        return s
+      })
     },
 
     setActiveSelection(state, index) {
       state.image.activeSelection = index
     },
     addSelection(state, selection) {
-      state.image.selections.push(selection)
+      state.image.selections.push(Object.assign({
+        real: {},
+        client: {},
+        category: null,
+      }, selection)
+      )
     },
     removeSelection(state, index) {
       state.image.selections.splice(index, 1)
     },
-    setSelection(state, {index, selection}) {
-      Vue.set(state.image.selections, index, selection)
+    setSelection(state, {index, dimensions}) {
+      let selection = state.image.selections[index]
+      selection.client = dimensions
+      selection.real = mapSelection(selection.client, state.canvas, state.image.dimensions)
+
+      // Vue.set(
+      //   state.image.selections, 
+      //   index, 
+      //   {
+      //     ...state.image.selections[index]
+      //     client: dimensions
+      //   }
+      //   mapSelection(selection, state.canvas, state.image.dimensions)
+      // )
     },
 
     setCategories(state, categories) {

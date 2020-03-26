@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { listImages, getImageData, getCategories } from '../api'
+import { listImages, getImageData, getCategories, postImageData } from '../api'
 import { mapSelection } from '../helpers'
 
 Vue.use(Vuex)
@@ -108,15 +108,42 @@ export default new Vuex.Store({
     },
     async fetchImage(context, path) {
       let data = await getImageData(path)
+
+      let selections = data.selections ? data.selections.map(s => {
+        return {
+          category: s.category,
+          real: { 
+            x: s.x,
+            y: s.y,
+            width: s.width,
+            height: s.height
+          }
+        }
+      }) : null
+
       context.commit('setImage', {
         path,
-        selections: data.selections,
+        selections: selections,
         meta: data.meta
       })
     },
     async fetchCategories(context) {
       let categories = await getCategories()
       context.commit('setCategories', categories)
+    },
+
+    async submitImage(context) {
+      let res = await postImageData(context.state.image.path, {
+        meta: context.state.image.meta,
+        selections: context.state.image.selections.map(s => {
+          return {
+            category: s.category,
+            ...s.real,
+          }
+        })
+      })
+
+      return res
     }
   },
   modules: {

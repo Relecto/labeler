@@ -14,9 +14,12 @@
           <Selections>
           </Selections>
         </div>
+        <div class="controls-container">
+          <Controls></Controls>
+        </div>
       </div>
     </div>
-
+    
     <div class="column">
       <Canvas v-if="currentImage" :key="currentImage" :image="currentImage"></Canvas>
     </div>
@@ -27,7 +30,8 @@
 import NativeCanvas from './components/NativeCanvas.vue'
 import Dataset from './components/Dataset.vue'
 import Selections from './components/Selections.vue'
-import Categories from "./components/Categories.vue";
+import Categories from './components/Categories.vue'
+import Controls from './components/Controls.vue'
 
 export default {
   name: 'App',
@@ -37,6 +41,7 @@ export default {
     Dataset,
     Selections,
     Categories,
+    Controls
   },
   computed: {
     currentImage() {
@@ -75,15 +80,19 @@ export default {
 }
 .dataset-container {
   max-height: 30%;
-  flex-grow: 1;
+  flex: 1;
 }
 .categories-container {
   max-height: 25%;
-  flex-grow: 1;
+  flex: 2;
 }
 .selections-container {
-  max-height: 45%;
-  flex-grow: 1;
+  max-height: calc(45% - 70px);
+  flex: 3;
+}
+.controls-container {
+  height: 70px;
+  flex: 0;
 }
 
 html, body {
@@ -93,7 +102,6 @@ html, body {
   margin: 0px;  /*removes default style*/
 
   user-select: none;
-
 }
 
 </style>

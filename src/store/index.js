@@ -117,7 +117,8 @@ export default new Vuex.Store({
             y: s.y,
             width: s.width,
             height: s.height
-          }
+          },
+          client: {}
         }
       }) : null
 

@@ -13,7 +13,7 @@
 //   "11.jpg": { meta: null },
 // };
 
-let categories = ['one', 'two', 'three', 'four']
+// let categories = ['one', 'two', 'three', 'four']
 
 export async function listImages() {
   let res = await fetch('/img')

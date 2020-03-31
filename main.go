@@ -11,6 +11,8 @@ type Options struct {
 	Path string `short:"p" long:"data-path" env:"DATA_PATH" description:"Path to dataset" default:"."`
 	Addr string `short:"l" long:"listen" env:"LISTEN" description:"Bind address and port, e.g. 0.0.0.0:8080" default:"0.0.0.0:8080"`
 	StaticPath string `long:"static-path" env:"STATIC_PATH" default:"dist/"`
+
+	Categories []string `long:"categories" short:"c" env:"CATEGORIES" env-delim:"," default:"one,two,three,four"`
 }
 
 var opts Options
@@ -24,6 +26,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	server := server.NewServer(opts.Path, opts.StaticPath)
+	server := server.NewServer(opts.Path, opts.StaticPath, opts.Categories)
 	log.Fatal(server.ListenAndServe(opts.Addr))
 }

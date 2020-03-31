@@ -28,15 +28,17 @@ type Server struct {
 	dataPath string
 	staticPath string
 	mux *http.ServeMux
+	categories []string
 }
 
-func NewServer(dataPath, staticPath string) *Server {
+func NewServer(dataPath, staticPath string, categories []string) *Server {
 	mux := http.NewServeMux()
 
 	return &Server{
 		dataPath: dataPath,
 		staticPath: staticPath,
 		mux: mux,
+		categories: categories,
 	}
 }
 
@@ -118,6 +120,17 @@ func (s *Server) postData(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
+func (s *Server) getCategories(w http.ResponseWriter, r *http.Request) {
+	data, err := json.Marshal(s.categories)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("content-type", "application/json")
+	w.Write(data)
+}
+
 func (s *Server) data(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -136,7 +149,7 @@ func (s *Server) init() {
 	)
 	s.mux.HandleFunc("/img", s.listFiles)
 	s.mux.HandleFunc("/data/", s.data)
-
+	s.mux.HandleFunc("/categories", s.getCategories)
 
 }
 

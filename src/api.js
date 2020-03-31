@@ -51,5 +51,8 @@ export async function postImageData(path, data) {
 // }
 
 export async function getCategories() {
-  return categories
+  let res = await fetch('/categories')
+  let data = res.json()
+
+  return data
 }
